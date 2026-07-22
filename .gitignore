@@ -1,0 +1,14 @@
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# local working files (not part of the site)
+lyrics.txt
+lrc-convert.py
+
+# editor cruft
+*.swp
+.vscode/

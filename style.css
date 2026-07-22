@@ -1,0 +1,400 @@
+/* ============================================================
+   OurHomeLane — style
+   Palette: desert dusk. Deep violet night, warm porch-light
+   amber, linen text. One signature: the glowing doorway.
+   ============================================================ */
+
+:root {
+  --night: #17131f;
+  --dusk: #2b2438;
+  --lamp: #e9a86a;
+  --lamp-soft: rgba(233, 168, 106, 0.35);
+  --linen: #f2ead9;
+  --faded: #a196b2;
+  --display: "Cormorant Garamond", Georgia, serif;
+  --body: "Outfit", system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  background: var(--night);
+  color: var(--linen);
+  font-family: var(--body);
+  font-weight: 300;
+  overflow: hidden;
+}
+
+button { font-family: var(--body); cursor: pointer; }
+
+/* ========== SPLASH ========== */
+
+.splash {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(ellipse 90% 60% at 50% 110%, #241c33 0%, transparent 60%),
+    var(--night);
+  z-index: 30;
+  transition: opacity 1.4s ease;
+}
+.splash.leaving { opacity: 0; pointer-events: none; }
+
+.doorway {
+  position: relative;
+  text-align: center;
+  padding: 4rem 2.5rem;
+  max-width: 26rem;
+  width: calc(100% - 2rem);
+}
+
+/* the porch light */
+.glow {
+  position: absolute;
+  top: -1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--lamp-soft) 0%, transparent 65%);
+  animation: breathe 5s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes breathe {
+  0%, 100% { opacity: 0.7; transform: translateX(-50%) scale(1); }
+  50%      { opacity: 1;   transform: translateX(-50%) scale(1.12); }
+}
+
+.splash-title {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(2.4rem, 7vw, 3.4rem);
+  letter-spacing: 0.01em;
+  color: var(--linen);
+  position: relative;
+}
+
+.splash-subtitle {
+  margin-top: 0.9rem;
+  color: var(--faded);
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  position: relative;
+}
+
+.key-row {
+  margin-top: 2.2rem;
+  display: flex;
+  gap: 0.6rem;
+  position: relative;
+}
+
+#password {
+  flex: 1;
+  min-width: 0;
+  background: var(--dusk);
+  border: 1px solid rgba(242, 234, 217, 0.15);
+  border-radius: 999px;
+  color: var(--linen);
+  font-family: var(--body);
+  font-size: 1rem;
+  padding: 0.85rem 1.2rem;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+#password::placeholder { color: var(--faded); opacity: 0.6; }
+#password:focus {
+  border-color: var(--lamp);
+  box-shadow: 0 0 0 3px var(--lamp-soft);
+}
+
+#unlock {
+  background: var(--lamp);
+  color: #241a10;
+  border: none;
+  border-radius: 999px;
+  padding: 0.85rem 1.4rem;
+  font-size: 0.95rem;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  transition: transform 0.15s ease, box-shadow 0.3s ease;
+}
+#unlock:hover, #unlock:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 24px var(--lamp-soft);
+}
+#unlock:focus-visible { outline: 2px solid var(--linen); outline-offset: 2px; }
+
+.wrong {
+  margin-top: 1.1rem;
+  color: #d98a8a;
+  font-size: 0.88rem;
+  position: relative;
+}
+.shake { animation: shake 0.4s ease; }
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-7px); }
+  75% { transform: translateX(7px); }
+}
+
+/* ========== STAGE / SLIDESHOW ========== */
+
+.stage { position: fixed; inset: 0; background: var(--night); }
+
+.photo-layer {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1.6s ease;
+  will-change: opacity;
+}
+.photo-layer.visible { opacity: 1; }
+
+/* blurred copy of the photo fills the screen behind the frame */
+.photo-layer .blur {
+  position: absolute;
+  inset: -8%;
+  background-size: cover;
+  background-position: center;
+  filter: blur(34px) brightness(0.4) saturate(1.1);
+}
+
+/* the photo itself: natural aspect ratio, never cropped or stretched */
+.photo-layer .pic {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  max-width: min(92vw, 1400px);
+  max-height: 84vh;
+  transform: translate(-50%, -50%) scale(1);
+  border-radius: 8px;
+  box-shadow: 0 12px 60px rgba(0, 0, 0, 0.65);
+  will-change: transform;
+}
+
+/* slow Ken Burns drift on the framed photo — alternates per slide */
+.photo-layer.kb-in  .pic { animation: kbIn  9s ease-out forwards; }
+.photo-layer.kb-out .pic { animation: kbOut 9s ease-out forwards; }
+@keyframes kbIn  { from { transform: translate(-50%, -50%) scale(1);    } to { transform: translate(-50%, -50%) scale(1.045); } }
+@keyframes kbOut { from { transform: translate(-50%, -50%) scale(1.045); } to { transform: translate(-50%, -50%) scale(1);    } }
+
+.caption {
+  position: absolute;
+  left: 2rem;
+  bottom: 2rem;
+  max-width: min(60vw, 34rem);
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(1.2rem, 3vw, 1.7rem);
+  color: var(--linen);
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.8);
+  opacity: 0;
+  transition: opacity 1.2s ease;
+  pointer-events: none;
+}
+.caption.visible { opacity: 1; }
+
+/* docked lyric video */
+.song-dock {
+  position: absolute;
+  right: 1.2rem;
+  bottom: 1.2rem;
+  width: clamp(170px, 24vw, 320px);
+  aspect-ratio: 16 / 9;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--lamp-soft);
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  transition: width 0.45s ease, opacity 0.6s ease;
+  z-index: 5;
+}
+.song-dock.large { width: clamp(300px, 55vw, 700px); }
+.song-dock.dimmed { opacity: 0.25; pointer-events: none; }
+.song-dock video { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* progress line */
+.progress {
+  position: absolute;
+  left: 0; right: 0; top: 0;
+  height: 2px;
+  background: rgba(242, 234, 217, 0.12);
+  z-index: 6;
+}
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--lamp);
+  transition: width 0.8s linear;
+}
+
+/* ========== TIMED LYRIC OVERLAY ========== */
+
+.lyric-line {
+  position: absolute;
+  left: 50%;
+  bottom: 13vh;
+  transform: translateX(-50%);
+  max-width: 82vw;
+  text-align: center;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(1.35rem, 3.6vw, 2.25rem);
+  color: var(--linen);
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.85), 0 0 44px rgba(233, 168, 106, 0.28);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+  z-index: 4;
+}
+.lyric-line.visible { opacity: 1; }
+
+/* fully quiet dock mode: audio keeps playing, video invisible */
+.song-dock.ghost { opacity: 0; pointer-events: none; }
+
+/* ========== CLIP INTERLUDE ========== */
+
+/* CRITICAL: display rules below override the [hidden] attribute,
+   so these two overlays must be forced off when hidden — otherwise
+   they sit invisibly over the page and swallow every click. */
+.interlude[hidden], .closing[hidden] { display: none !important; }
+.interlude:not(.visible), .closing:not(.visible) { pointer-events: none; }
+
+.interlude {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(23, 19, 31, 0.88);
+  backdrop-filter: blur(6px);
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+.interlude.visible { opacity: 1; }
+
+.interlude-card {
+  position: relative;
+  width: min(92vw, 880px);
+  text-align: center;
+}
+.interlude-card video {
+  width: 100%;
+  max-height: 72vh;
+  border-radius: 12px;
+  border: 1px solid var(--lamp-soft);
+  box-shadow: 0 10px 60px rgba(0, 0, 0, 0.7);
+  background: #000;
+  display: block;
+}
+
+.clip-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  border: none;
+  background: var(--lamp);
+  color: #241a10;
+  display: grid;
+  place-items: center;
+  transition: transform 0.2s ease, opacity 0.4s ease;
+}
+.clip-play:hover { transform: translate(-50%, -50%) scale(1.06); }
+.clip-play.hidden { opacity: 0; pointer-events: none; }
+.clip-play svg { margin-left: 4px; }
+
+.ring {
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 2px solid var(--lamp);
+  animation: pulse 2s ease-out infinite;
+}
+@keyframes pulse {
+  0%   { transform: scale(1);   opacity: 0.8; }
+  100% { transform: scale(1.5); opacity: 0;   }
+}
+
+.clip-instruction {
+  margin-top: 1.2rem;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(1.15rem, 3vw, 1.5rem);
+  color: var(--linen);
+  transition: opacity 0.4s ease;
+}
+.clip-instruction.hidden { opacity: 0; }
+
+/* ========== CLOSING ========== */
+
+.closing {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  gap: 1.2rem;
+  padding: 2rem;
+  background:
+    radial-gradient(ellipse 90% 60% at 50% 110%, #241c33 0%, transparent 60%),
+    rgba(23, 19, 31, 0.94);
+  z-index: 12;
+  opacity: 0;
+  transition: opacity 1.6s ease;
+}
+.closing.visible { opacity: 1; }
+
+.closing h2 {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(2.2rem, 7vw, 3.6rem);
+}
+.closing p {
+  color: var(--faded);
+  font-size: clamp(1rem, 2.6vw, 1.2rem);
+  max-width: 34rem;
+  margin: 0 auto;
+}
+#replay {
+  margin-top: 1rem;
+  justify-self: center;
+  background: transparent;
+  color: var(--lamp);
+  border: 1px solid var(--lamp);
+  border-radius: 999px;
+  padding: 0.75rem 1.6rem;
+  font-size: 0.95rem;
+  letter-spacing: 0.03em;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+#replay:hover, #replay:focus-visible { background: var(--lamp); color: #241a10; }
+
+/* ========== SMALL SCREENS ========== */
+
+@media (max-width: 600px) {
+  .caption { left: 1.2rem; bottom: 5.4rem; max-width: 85vw; }
+  .song-dock { width: 44vw; }
+  .song-dock.large { width: 92vw; }
+  .key-row { flex-direction: column; }
+  #unlock { padding: 0.9rem; }
+}
+
+/* ========== REDUCED MOTION ========== */
+
+@media (prefers-reduced-motion: reduce) {
+  .photo-layer.kb-in .pic, .photo-layer.kb-out .pic { animation: none; }
+  .glow, .ring { animation: none; }
+  .splash, .interlude, .closing, .photo-layer { transition-duration: 0.2s; }
+}

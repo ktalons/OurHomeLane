@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Our Home Lane</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Outfit:wght@200;300;400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ========== SPLASH / PASSWORD GATE ========== -->
+  <section id="splash" class="splash">
+    <div class="doorway">
+      <div class="glow" aria-hidden="true"></div>
+      <h1 id="splash-title" class="splash-title"></h1>
+      <p id="splash-subtitle" class="splash-subtitle"></p>
+      <div class="key-row">
+        <input
+          id="password"
+          type="password"
+          inputmode="text"
+          autocomplete="off"
+          autocapitalize="none"
+          spellcheck="false"
+          placeholder="password"
+          aria-label="Password" />
+        <button id="unlock" type="button"></button>
+      </div>
+      <p id="wrong" class="wrong" role="alert" hidden></p>
+    </div>
+  </section>
+
+  <!-- ========== MAIN STAGE ========== -->
+  <main id="stage" class="stage" hidden>
+
+    <!-- two stacked layers crossfade between slides -->
+    <div class="photo-layer" id="layerA"><div class="blur"></div><img class="pic" alt="" /></div>
+    <div class="photo-layer" id="layerB"><div class="blur"></div><img class="pic" alt="" /></div>
+
+    <p id="caption" class="caption"></p>
+
+    <!-- docked lyric video -->
+    <div id="song-dock" class="song-dock" title="Tap to enlarge">
+      <video id="song" playsinline preload="auto"></video>
+    </div>
+
+    <!-- thin progress line -->
+    <div class="progress"><div id="progress-fill" class="progress-fill"></div></div>
+
+    <!-- ========== CLIP INTERLUDE ========== -->
+    <div id="interlude" class="interlude" hidden>
+      <div class="interlude-card">
+        <video id="clip" playsinline preload="auto"></video>
+        <button id="clip-play" class="clip-play" aria-label="Play clip">
+          <span class="ring" aria-hidden="true"></span>
+          <svg viewBox="0 0 24 24" width="34" height="34" aria-hidden="true">
+            <path d="M8 5v14l11-7z" fill="currentColor"/>
+          </svg>
+        </button>
+        <p id="clip-instruction" class="clip-instruction"></p>
+      </div>
+    </div>
+
+    <!-- ========== CLOSING CARD ========== -->
+    <div id="closing" class="closing" hidden>
+      <h2 id="closing-title"></h2>
+      <p id="closing-message"></p>
+      <button id="replay" type="button"></button>
+    </div>
+
+  </main>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
